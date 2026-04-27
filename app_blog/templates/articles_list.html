@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Публікації</title>
+</head>
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% spaceless %}
+
+<a href="{% url 'home' %}">← На головну</a>
+
+<h1>Публікації</h1>
+
+{% if category %}
+    <h3>{{ category }}</h3>
+{% endif %}
+
+{% for item in items %}
+<div class="article-card">
+
+    <a href="{{ item.get_absolute_url }}">
+        <h4>{{ item.title }}</h4>
+    </a>
+
+    <h5>{{ item.pub_date|date:"j E Y" }}</h5>
+
+    <p>
+        {{ item.description|striptags|truncatewords:32 }}
+    </p>
+
+    <div class="container-image">
+        <img src="{{ item.images.all.0.image.url }}" alt="">
+    </div>
+
+</div>
+{% endfor %}
+
+{% endspaceless %}
+{% endblock %}
+</body>
+</html>

@@ -4,15 +4,31 @@ from django.urls import reverse
 
 
 class Category(models.Model):
-    category = models.CharField('Категорія', max_length=250)
+    category = models.CharField(
+        'Категорія',
+        max_length=250,
+        help_text='Максимум 250 символів'
+    )
     slug = models.SlugField('Слаг')
 
+    objects = models.Manager()
+
     class Meta:
-        verbose_name = 'Категорія'
-        verbose_name_plural = 'Категорії'
+        verbose_name = 'Категорія для публікації'
+        verbose_name_plural = 'Категорії для публікацій'
 
     def __str__(self):
         return self.category
+
+    def get_absolute_url(self):
+        try:
+            return reverse(
+                'articles-category-list',
+                kwargs={'slug': self.slug}
+            )
+        except:
+            return "/"
+
 
 
 class Article(models.Model):
@@ -37,6 +53,17 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+      return reverse(
+        'news-detail',
+        kwargs={
+            'year': self.pub_date.year,
+            'month': self.pub_date.month,
+            'day': self.pub_date.day,
+            'slug': self.slug
+        }
+    )
 
 
 class ArticleImage(models.Model):
